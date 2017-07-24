@@ -34,8 +34,6 @@ function generateReport(input) {
     for (let currentStudentNo of studentNos) {
         for (let student of students) {
             if (parseInt(student.studentNo) == parseInt(currentStudentNo)) {
-                console.log(currentStudentNo, student);
-
                 studentGradeStrings.push(generateReportItem(student));
             }
         }

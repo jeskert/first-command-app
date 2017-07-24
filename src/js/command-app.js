@@ -1,6 +1,6 @@
 'use strict';
 const readlineSync = require("readline-sync");
-const student = require('./student');
+const student = require('./student-for-command');
 const report = require('./report');
 
 const ADD_STUDENT = 1;

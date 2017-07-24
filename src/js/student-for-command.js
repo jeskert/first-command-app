@@ -33,7 +33,6 @@ function buildStudentInfoPromptString(type) {
             return "";
             break;
     }
-
 }
 
 function addStudentInfo(input) {
@@ -71,8 +70,8 @@ function isStudentMatching(input) {
     return result;
 }
 
+
+
 module.exports = {
-    addStudentAchievement,
-    buildStudentInfoPromptString,
-    addStudentInfo
+    addStudentAchievement
 };
