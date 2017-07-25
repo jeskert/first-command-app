@@ -1,15 +1,9 @@
-'use strict';
-
-const ADD_STUDENT = 1;
-const GENERATE_REPORT = 2;
-const EXIT = 3;
-
 $(document).ready(function () {
     showTable();
 });
 
-function getAllElements() {
-    let studentInfo = document.getElementById("studentInfo");
+function getAllElements(formId) {
+    let studentInfo = document.getElementById(formId);
     let elements = [];
     let tagElements = studentInfo.getElementsByTagName('input');
     for (let element of tagElements) {
@@ -30,8 +24,12 @@ function validateForm(elements) {
     return flag;
 }
 
-function addStudents() {
-    let elements = getAllElements();
+function resetForm() {
+    document.getElementById("studentInfo").reset();
+}
+
+function saveOrUpdateStudents(type) {
+    let elements = getAllElements("studentInfo"), modal = $('#addModal');
     if (validateForm(elements)) {
         let studentName = document.getElementById("studentName").value;
         let studentNo = document.getElementById("studentNo").value;
@@ -42,27 +40,36 @@ function addStudents() {
         student.chineseScore = document.getElementById("chineseScore").value;
         student.englishScore = document.getElementById("englishScore").value;
         student.programmingScore = document.getElementById("programmingScore").value;
+        student.calculateTotalAndAverage();
 
-        saveToLocalstorage(student);
+        saveToLocalStorage(student, type);
 
         document.getElementById("successAlert").style.visibility = "visible";
-        $('#addModal').modal('hide');
+        modal.modal('hide');
 
-        $("#addModal").on('hidden.bs.modal', function () {
+        modal.on('hidden.bs.modal', function () {
             document.getElementById("studentInfo").reset();
-            location.reload()
+            setTimeout("location.reload()", 1000);
         });
-        // setTimeout(document.getElementById("successAlert").style.visibility = "hidden", 3000);
     }
 }
 
-function saveToLocalstorage(obj) {
+function saveToLocalStorage(obj, type) {
     let currentArray = [];
+    let isExist = false;
     if (undefined == localStorage.students || "" == localStorage.students) {
         currentArray = [obj];
     } else {
         currentArray = JSON.parse(localStorage.students);
-        currentArray.push(obj);
+        for (let i = 0; i < currentArray.length; i++) {
+            if (currentArray[i].studentNo == obj.studentNo) {
+                isExist = true;
+                currentArray.splice(i, 1, obj);
+            }
+        }
+        if (!isExist) {
+            currentArray.push(obj);
+        }
     }
     localStorage.students = JSON.stringify(currentArray);
 }
@@ -75,6 +82,37 @@ function getLocalStorageInfo() {
     }
 }
 
+function deleteFromLocalStorage(id) {
+    let currentArray = JSON.parse(localStorage.students);
+    for (let i = 0; i < currentArray.length; i++) {
+        if (currentArray[i].studentNo == id) {
+            currentArray.splice(i, 1);
+        }
+    }
+    localStorage.students = JSON.stringify(currentArray);
+}
+
+function deleteSelection(obj) {
+    let uniqueId = $(obj).parent().parent().attr("data-uniqueid");
+    let currentStudentData = $('#table').bootstrapTable('getRowByUniqueId', uniqueId);
+    deleteFromLocalStorage(currentStudentData.studentNo);
+    location.reload()
+}
+
+function editSelection(obj) {
+    let uniqueId = $(obj).parent().parent().attr("data-uniqueid");
+    let currentStudentData = $('#table').bootstrapTable('getRowByUniqueId', uniqueId);
+
+    $('#studentName').val(currentStudentData.studentName);
+    $('#studentNo').val(currentStudentData.studentNo);
+    $('#studentEthnic').val(currentStudentData.studentEthnic);
+    $('#studentClass').val(currentStudentData.studentClass);
+    $('#mathScore').val(currentStudentData.mathScore);
+    $('#chineseScore').val(currentStudentData.chineseScore);
+    $('#englishScore').val(currentStudentData.englishScore);
+    $('#programmingScore').val(currentStudentData.programmingScore);
+}
+
 function showTable() {
     let students = getLocalStorageInfo();
     let responseHandler = function (res) {
@@ -85,10 +123,10 @@ function showTable() {
     };
 
     let operateFormatter = function (value, row, index) {
-        console.log(index);
+        let buttonId = 'button' + index;
         return [
-            '<button class="btn btn-info btn-sm rightSize detailBtn" type="button" data-toggle="modal" data-target="#modifyModal"><i class="fa fa-paste"></i> 修改</button>',
-            '<button class="btn btn-danger btn-sm rightSize packageBtn" type="button" data-toggle="modal" data-target="#deleteModal"><i class="fa fa-envelope"></i> 删除</button>'
+            '<button class="btn btn-info btn-sm rightSize detailBtn" type="button" onclick="editSelection(this)" data-toggle="modal" data-target="#addModal" id="modify' + buttonId +'"><i class="fa fa-paste"></i> 修改</button>',
+            '<button class="btn btn-danger btn-sm rightSize packageBtn" type="button" onclick="deleteSelection(this)" id="delete' + buttonId +'"><i class="fa fa-envelope"></i> 删除</button>'
         ].join('    ')
     };
 
@@ -119,12 +157,12 @@ function showTable() {
         }, {
             field: 'programmingScore',
             title: '编程成绩'
-        // }, {
-        //     field: 'average',
-        //     title: '平均分'
-        // }, {
-        //     field: 'total',
-        //     title: '总分'
+        }, {
+            field: 'average',
+            title: '平均分'
+        }, {
+            field: 'total',
+            title: '总分'
         }, {
             field: 'operate',
             title: '操作',
@@ -134,9 +172,8 @@ function showTable() {
         search: true,
         searchOnEnterKey: true,
         showColumns: true,
-        responseHandler: responseHandler
+        responseHandler: responseHandler,
+        uniqueId: "studentNo"
     });
 }
-//李伟晔, 0101, 蒙古族, 2,chinese: 90, math: 95, english: 98, programming: 100
-//李伟晔2, 0102, 彝族, 2, chinese: 60, math: 25, english: 18, programming: 9
 

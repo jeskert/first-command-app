@@ -13,3 +13,11 @@
     width: 20%;
     visibility: hidden;
 }
+
+body {
+    background-image: url(../static/1.png);
+}
+
+#table, tr, td {
+    border: 2px groove black;
+}
