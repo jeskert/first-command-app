@@ -21,3 +21,8 @@ body {
 #table, tr, td {
     border: 2px groove black;
 }
+
+.search {
+    width: 250px;
+    padding-bottom: 10px;
+}

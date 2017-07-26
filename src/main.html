@@ -3,16 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <title>学生成绩单</title>
+    <link rel="stylesheet" type="text/css" href="../lib/css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="../lib/css/bootstrap-table.css">
+    <link rel="stylesheet" type="text/css" href="../src/css/main.css">
     <script src="../lib/js/jquery.min.js"></script>
     <script src="../lib/js/bootstrap.js"></script>
     <script src="../lib/js/bootstrap-table.js"></script>
+    <script src="../lib/js/bootstrap-confirmation.js"></script>
     <script src="./js/student.js"></script>
     <script src="./js/storage.js"></script>
     <script src="./js/table.js"></script>
     <script src="./js/web-app.js"></script>
-    <link rel="stylesheet" type="text/css" href="../lib/css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="../lib/css/bootstrap-table.css">
-    <link rel="stylesheet" type="text/css" href="../src/css/main.css">
 </head>
 <body>
     <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -38,6 +39,9 @@
         <div class="main-title">
             <h1>学生成绩单</h1>
         </div>
+        <div class="pull-right search">
+            <input class="form-control" type="text" placeholder="请输入学号，用逗号隔开">
+        </div>
         <table class="table table-bordered" id="table"></table>
     </div>
 
@@ -51,7 +55,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="resetForm()">
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onclick="resetModal()">
                         &times;
                     </button>
                     <h4 class="modal-title" id="myModalLabel">
@@ -95,7 +99,7 @@
                     </form>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="resetForm()">关闭</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="resetModal()">关闭</button>
                     <button type="submit" class="btn btn-primary" onclick="saveOrUpdateStudents()">提交</button>
                 </div>
             </div>
