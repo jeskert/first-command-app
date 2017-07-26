@@ -18,8 +18,8 @@ body {
     background-image: url(../static/1.png);
 }
 
-#table, tr, td {
-    border: 2px groove black;
+#table, tr {
+    border: 2px solid black;
 }
 
 .search {

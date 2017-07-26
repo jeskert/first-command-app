@@ -18,14 +18,14 @@ function showTable() {
 
         let deleteButton = '<button class="btn btn-danger btn-sm rightSize packageBtn" data-toggle="confirmation" ' +
             'data-popout="true" data-btn-ok-label="删除" data-btn-ok-icon="glyphicon glyphicon-trash" ' +
-            'data-btn-ok-class="btn-success"' +
+            'data-btn-ok-class="btn-success" ' +
             'data-btn-cancel-label="取消" data-btn-cancel-icon="glyphicon glyphicon-ban-circle"' +
             'data-btn-cancel-class="btn-danger"' +
             'data-title="删除学生" data-content=""' +
             'type="button" onclick="getDeleteContent(this)" id="delete' + buttonId + '">' +
             '<i class="fa fa-envelope"></i> ' +
             '删除' +
-            '</button>'
+            '</button>';
 
         return [editButton, deleteButton].join('    ')
     };
@@ -72,7 +72,8 @@ function showTable() {
         columns: columns,
         data: students,
         responseHandler: responseHandler,
-        uniqueId: "studentNo"
+        uniqueId: "studentNo",
+        valign: 'middle'
     });
 
     $(".search input").bind('keyup', function (e) {
@@ -103,6 +104,11 @@ function showTable() {
     $('[data-toggle=confirmation]').on('confirmed.bs.confirmation', function () {
         deleteSelection(this);
     });
+
+    $('[data-toggle=confirmation]').on('canceled.bs.confirmation', function () {
+        $('.popover').remove();
+    });
+
 }
 
 function getDeleteContent(obj) {
