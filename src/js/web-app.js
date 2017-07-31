@@ -1,5 +1,6 @@
 $(document).ready(function () {
-    showTable();
+
+    getDataFromRedis();
 });
 
 
@@ -20,7 +21,7 @@ function resetModal() {
     $("#studentNo").attr("disabled", false);
 }
 
-function saveOrUpdateStudents(type) {
+function saveOrUpdateStudents() {
     let elements = $("#studentInfo input");
     let modal = $('#addModal');
     if (validateForm(elements)) {
@@ -35,23 +36,31 @@ function saveOrUpdateStudents(type) {
         student.programmingScore = $("#programmingScore").val();
         student.calculateTotalAndAverage();
 
-        saveToLocalStorage(student, type);
-
-        $("#successAlert").css("visibility", "visible");
-        modal.modal('hide');
-
-        modal.on('hidden.bs.modal', function () {
-            $("#studentInfo").trigger("reset");
-            setTimeout("location.reload()", 1000);
-        });
+        saveDataToRedis(student);
     }
+}
+
+function postSuccess() {
+    $("#successAlert").css("visibility", "visible");
+    let modal = $('#addModal');
+    modal.modal('hide');
+
+    modal.on('hidden.bs.modal', function () {
+        $("#studentInfo").trigger("reset");
+        setTimeout("location.reload()", 1000);
+    });
+}
+
+function postFailed(data) {
+    alert(data.errMsg);
 }
 
 function deleteSelection(obj) {
     let uniqueId = $(obj).parent().parent().attr("data-uniqueid");
     let currentStudentData = $('#table').bootstrapTable('getRowByUniqueId', uniqueId);
-    deleteFromLocalStorage(currentStudentData.studentNo);
-    location.reload();
+    // deleteFromLocalStorage(currentStudentData.studentNo);
+    // location.reload();
+    deleteDataFromRedis(currentStudentData.studentNo);
 }
 
 function editSelection(obj) {

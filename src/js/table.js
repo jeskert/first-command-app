@@ -1,5 +1,4 @@
-function showTable() {
-    let students = getLocalStorageInfo();
+function showTable(students) {
     let responseHandler = function (res) {
         return {
             "rows": res,

@@ -1,4 +1,4 @@
-function saveToLocalStorage(obj, type) {
+function saveToLocalStorage(obj) {
     let currentArray = [];
     let isExist = false;
     if (undefined == localStorage.students || "" == localStorage.students) {
