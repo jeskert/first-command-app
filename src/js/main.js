@@ -21,15 +21,19 @@ app.get('/students', function (req, res) {
     let studentNos = req.query.studentNos;
     if (studentNos == "" || studentNos == undefined) {
         client.keys("stu:*", function (err, reply) {
-            client.mget(reply, function (mgetErr, mgetReply) {
-                mgetReply.forEach((mgetItem, index) => {
-                    result.push(JSON.parse(mgetItem));
-                    if (index == mgetReply.length - 1) {
-                        res.send(result);
-                    }
-                });
-                // res.send(mgetReply);
-            })
+            if (reply != "" && reply != undefined) {
+                client.mget(reply, function (mgetErr, mgetReply) {
+                    mgetReply.forEach((mgetItem, index) => {
+                        result.push(JSON.parse(mgetItem));
+                        if (index == mgetReply.length - 1) {
+                            res.send(result);
+                        }
+                    });
+                    // res.send(mgetReply);
+                })
+            } else {
+                res.send("")
+            }
         });
     } else {
         let searchNos = studentNos.split(',');

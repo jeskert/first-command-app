@@ -12,6 +12,18 @@ function saveDataToRedis(obj) {
     });
 }
 
+function updateDataToRedis(obj) {
+    $.ajax({
+        type: 'PUT',
+        data: obj,
+        url:  BASE_URL + '/students/' + obj.studentNo,
+        dataType: 'JSONP',
+        crossDomain: true,
+        success: function (data) {
+            postSuccess();
+        }
+    })
+}
 
 function getDataFromRedis(input) {
     let request = new XMLHttpRequest();
